@@ -168,3 +168,86 @@ def guessingNumber():
     print("Correcto")
 
     # 16  Do-while simulado: menú que se repite
+def menu():
+    # Opciones
+    print("1) Saludar\n2) Mostrar tabla del 5\n3) Salir")
+    while True:
+        choice = int(input())
+        if choice == 3:
+            break
+        match choice:
+            case 1:
+                print("Hola")
+                break
+            case 2:
+                for _ in range(10):
+                    print("Tabla del 5 : " + str((_+1)*5))
+                break
+        
+# Bloque F - For, range y enumerate
+    # 17 Tabla de multiplicar
+def multiplicationTable():
+    num =int(input())
+    for _ in range(10):
+        print("Tabla de multiplicar : " + str((_+1)*num))
+
+    # 18 Suma de pares
+def pairSum():
+    num =int(input())
+    sum = 0
+    for _ in range(2,num+1,2):
+        sum = sum + _
+        print("Suma de pares : " + str(sum))
+
+    # 19 Enumerar caracteres
+def textEnumeration():
+    string = input()
+    for _ in enumerate(string):
+        print(_)
+
+    # 20 Promedio de calificaciones
+def avgGrades():
+    iterTimes = int(input())
+    grades = []
+    for _ in range(iterTimes):
+        grades.append(int(input()))
+    sum = 0
+    for _ in grades:
+        sum = sum + _
+    print(sum)
+
+# Bloque G - break y continue (+ for-else)
+    # 21 Contraseña con 3 intentos (while + break)
+def paswdTry3():
+    tries = 0
+    while tries < 3:
+        tries = tries +1
+        paswdInput = input()
+        if paswdInput == '1234':
+            print("Acceso")
+            return
+    print("Bloqueado")
+    return
+
+    # 22 Saltar múltiplos de 3 (continue)
+def skipNum():
+    for _ in range(1,31,1):
+        if _%3!=0:
+            print( _ )
+            continue
+        else:
+            continue
+
+
+skipNum()
+
+    # 23 Buscar elemento (for-else)
+def search():
+    nums = [4,8,15,16,23,42]
+    lookFor=input()
+    for _ in range(len(nums)):
+        if lookFor==_:
+            print("Encontrado")
+            break
+    else:
+        print("No encontrado")

@@ -111,4 +111,60 @@ def rangeCheck(number : float):
 
     # 10 USUARIO Y CONTRASEÑA
 def uses_pswd():
-    
+    user = input()
+    pswd = input()
+    if user == "Admin" and pswd == "1234":
+        print("Acceso")
+    else: 
+        print("Acceso denegado")
+
+# Bloque D - Pertenencia (in / not in)
+    # 11 VOCAL O CONSONANTE
+def letterCheck():
+    letter = input().lower()
+    if letter in ['a','e','i','o','u']:
+        print("Es vocal")
+    else: 
+        print("Es consonante")
+
+    # 12 LISTA DE INVITADOS
+def partyGuests():
+    invitados = ["ana","luis","paco"]
+    name = input().lower()
+
+    if name in invitados:
+        print("Invitado")
+    else : 
+        print("No invitado")
+
+# Bloque E - While (y do-while simulado)
+    # 13 Contador con while
+def counter():
+    i = 0
+    while i < 10:
+        i = i+1
+        print(i)
+
+    # 14 Suma acumulada
+def accSum():
+    sum = 0
+    while True:
+        number = int(input())
+        sum = sum + number
+        if number == 0:
+            break
+    print(sum)
+
+    # 15 Adivina el número
+def guessingNumber():
+    num = 7
+    guess = 0
+    while guess != num:
+        guess = int(input())
+        if abs(guess - num) < 10 and guess != num:
+            print("Muy alto")
+        elif abs(guess - num) < 30 and guess != num:
+            print("Muy bajo")
+    print("Correcto")
+
+    # 16  Do-while simulado: menú que se repite

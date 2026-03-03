@@ -14,6 +14,14 @@ dimensiones_FOVISSSTE = 'rango_edad,rango_salarial,valor_vivienda,modalidad'
 dimensiones_infonavit = 'rango_edad,rango_salarial,valor_vivienda,vivienda,modalidad'
 dimensiones_CNBV = 'rango_edad,rango_salarial,valor_vivienda,modalidad'
 dimensiones_inv_vivienda = 'avance_obra,segmento_uma,tipo_vivienda,pcu,segmento'
+dimensiones_reg_vivienda = 'segmento,segmento_uma,tipo_vivienda,superficie,recamara'
+dimensiones_verificacion = 'segmento,segmento_uma,tipo_vivienda,superficie,recamara'
+dimensiones_produccion = 'segmento,segmento_uma,tipo_vivienda,superficie,recamara'
+
+'''
+############## END OF PARAMETER SETTING ###############
+'''
+############## FACTORY FOR API CLASS ################
 
 class API_gob_vivienda_builder():
     años = '2025'
@@ -30,8 +38,10 @@ class API_gob_vivienda_builder():
         print(r.status_code)
         self.df = self.gen_df(r)
         if self.df.empty:
-           print("Dataframe is empty\n\tExiting...")
-           exit(1)
+           print(f"Dataframe {Get_Function} is empty\n\tExiting...")
+           return
+        else:
+            self.export_to_csv(Get_Function)
         pass
 
     def export_to_csv(self, nombre_CSV : str):
@@ -48,17 +58,13 @@ class API_gob_vivienda_builder():
 '''
 ############# END OF FACTORY FUNCTION #############
 '''
-
+############# START OF API CSV GENERATION #########
 Financiamiento = API_gob_vivienda_builder("GetFinanciamiento",dimensiones_financiamiento)
-Financiamiento.export_to_csv("Financiamiento")
 CONAVI = API_gob_vivienda_builder("GetCONAVI",dimensiones_conavi)
-CONAVI.export_to_csv("CONAVI")
 FOVISSSTE = API_gob_vivienda_builder("GetFOVISSSTE",dimensiones_FOVISSSTE)
-FOVISSSTE.export_to_csv("FOVISSSTE")
 INFONAVIT = API_gob_vivienda_builder("GetINFONAVIT",dimensiones_infonavit)
-INFONAVIT.export_to_csv("INFONAVIT")
 CNBV = API_gob_vivienda_builder("GetCNBV",dimensiones_CNBV)
-CNBV.export_to_csv("CNBV")
 Inventario_de_vivienda = API_gob_vivienda_builder("GetInventario",dimensiones_inv_vivienda)
-Inventario_de_vivienda.export_to_csv("Inventario_de_vivienda")
-
+Registro_de_vivienda = API_gob_vivienda_builder("GetRegistro",dimensiones_reg_vivienda)
+Verificacion_de_vivienda = API_gob_vivienda_builder("GetVerificacion",dimensiones_verificacion)
+Produccion_de_vivienda = API_gob_vivienda_builder("GetProduccion",dimensiones_produccion)

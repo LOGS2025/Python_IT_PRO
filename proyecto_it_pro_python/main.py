@@ -20,22 +20,43 @@ dimensiones_reg_vivienda = 'segmento,segmento_uma,tipo_vivienda,superficie,recam
 dimensiones_verificacion = 'segmento,segmento_uma,tipo_vivienda,superficie,recamara'
 dimensiones_produccion = 'segmento,segmento_uma,tipo_vivienda,superficie,recamara'
 
-
 import pandas as pd
 import gobCSV_housing as ghCSV
 import json
 
-
 def housing_costs():
-    segmento_uma : str
-    segmento : str
-    superficie : str
-    recamara : str
-    pcu : str
-    tipo_vivienda : str
-    modalidad : str
-    valor_vivienda : str 
-    avance_obra : str
+    # segmento_uma : str
+    # segmento : str
+    # superficie : str
+    # recamara : str
+    # pcu : str
+    # tipo_vivienda : str
+    # modalidad : str
+    # valor_vivienda : str 
+    # avance_obra : str
+    '''
+    BJ => Benito Juárez
+    m => male
+    f => female
+    porcentaje de población económicamente activa en la BJ => PPEA
+    índice de desarrollo económico => IDE
+    PPEA_f_2015 = 0.5225
+    PPEA_m_2015 = 0.7366
+    pop_BJ_2015 = 417416
+    pop_BJ_m_2015 = 193007
+    median_pop_BJ_m_2015 = 38
+    median_pop_BJ_f_2015 = 38
+
+    pop_BJ_2020 = 434153
+    PPEA_2020 = 0.74
+    IDE_2020 = 0.58
+    
+    Crecimiento Anual => YrGrowth
+    YrGrowth_1990_2020 = 0.0119->0.0117
+
+
+    '''
+
     pass
 def demographic_parse():
     rango_edad : str
@@ -65,15 +86,15 @@ def incertidumbre():
 
 
 ############# START OF API CSV GENERATION #########
-Financiamiento = ghCSV.API_gob_vivienda_builder("GetFinanciamiento",dimensiones_financiamiento)
-CONAVI = ghCSV.API_gob_vivienda_builder("GetCONAVI",dimensiones_conavi)
-FOVISSSTE = ghCSV.API_gob_vivienda_builder("GetFOVISSSTE",dimensiones_FOVISSSTE)
-INFONAVIT = ghCSV.API_gob_vivienda_builder("GetINFONAVIT",dimensiones_infonavit)
-CNBV = ghCSV.API_gob_vivienda_builder("GetCNBV",dimensiones_CNBV)
-Inventario_de_vivienda = ghCSV.API_gob_vivienda_builder("GetInventario",dimensiones_inv_vivienda)
-Registro_de_vivienda = ghCSV.API_gob_vivienda_builder("GetRegistro",dimensiones_reg_vivienda)
-Verificacion_de_vivienda = ghCSV.API_gob_vivienda_builder("GetVerificacion",dimensiones_verificacion)
-Produccion_de_vivienda = ghCSV.API_gob_vivienda_builder("GetProduccion",dimensiones_produccion)
+Financiamiento              = ghCSV.API_gob_vivienda_builder("GetFinanciamiento",   dimensiones_financiamiento)
+CONAVI                      = ghCSV.API_gob_vivienda_builder("GetCONAVI",           dimensiones_conavi)
+FOVISSSTE                   = ghCSV.API_gob_vivienda_builder("GetFOVISSSTE",        dimensiones_FOVISSSTE)
+INFONAVIT                   = ghCSV.API_gob_vivienda_builder("GetINFONAVIT",        dimensiones_infonavit)
+CNBV                        = ghCSV.API_gob_vivienda_builder("GetCNBV",             dimensiones_CNBV)
+Inventario_de_vivienda      = ghCSV.API_gob_vivienda_builder("GetInventario",       dimensiones_inv_vivienda)
+Registro_de_vivienda        = ghCSV.API_gob_vivienda_builder("GetRegistro",         dimensiones_reg_vivienda)
+Verificacion_de_vivienda    = ghCSV.API_gob_vivienda_builder("GetVerificacion",     dimensiones_verificacion)
+Produccion_de_vivienda      = ghCSV.API_gob_vivienda_builder("GetProduccion",       dimensiones_produccion)
 ############ END OF API CSV GENERATION #########
 
 '''

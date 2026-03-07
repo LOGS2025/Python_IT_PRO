@@ -37,6 +37,17 @@ def housing_costs():
     valor_vivienda : str 
     avance_obra : str
     pass
+
+# El parseo demográfico podemos aproximarlo sabiendo que la población en 
+# la Benito Juárez oscila alrededor de 400,000 habitantes. De esto, tenemos 
+# que tomar en cuenta el porcentaje de esa población que es Económicamente Activa
+# y relacionarlo dentro de las tablas csv's, que ofrecen la cantidad de nuevas viviendas
+# construidas por su respectivo rango de edad. Sabiendo esto, podemos unir al 
+# modelo de crecimiento por edad, y, así, su demanda a los años aproximados.
+
+# La ecuación
+# Pop(time) = pop_actual.edad + time +(-) f_incremento/decremento_pop(edad) 
+
 def demographic_parse():
     rango_edad : str
     rango_salarial : str

@@ -86,6 +86,3 @@ Registro_de_vivienda = ghCSV.API_gob_vivienda_builder("GetRegistro",dimensiones_
 Verificacion_de_vivienda = ghCSV.API_gob_vivienda_builder("GetVerificacion",dimensiones_verificacion)
 Produccion_de_vivienda = ghCSV.API_gob_vivienda_builder("GetProduccion",dimensiones_produccion)
 ############ END OF API CSV GENERATION #########
-
-'''
-'''

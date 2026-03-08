@@ -22,8 +22,10 @@ class API_gob_vivienda_builder():
         self.años = año
         params=f"{Get_Function}/{self.años}/{self.clave_estado}/{self.clave_municipio}/{dimensiones}"
         self.url=f"https://sniiv.sedatu.gob.mx/api/CuboAPI/{params}"
+        
         r = requests.get(self.url)
         print(r.status_code)
+        
         self.df = self.gen_df(r)
         if self.df.empty:
            print(f"Dataframe {Get_Function} is empty\n\tExiting...")
@@ -43,7 +45,5 @@ class API_gob_vivienda_builder():
     def gen_df(self, r : requests.models.Response) -> pandas.DataFrame:
         return pandas.DataFrame(r.json())
 
-'''
 ############# END OF FACTORY FUNCTION #############
-'''
 

@@ -22,7 +22,7 @@ class API_gob_vivienda_builder():
         self.años = año
         params=f"{Get_Function}/{self.años}/{self.clave_estado}/{self.clave_municipio}/{dimensiones}"
         self.url=f"https://sniiv.sedatu.gob.mx/api/CuboAPI/{params}"
-        
+       
         r = requests.get(self.url)
         print(r.status_code)
         

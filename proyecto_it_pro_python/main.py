@@ -86,3 +86,11 @@ Registro_de_vivienda = ghCSV.API_gob_vivienda_builder("GetRegistro",dimensiones_
 Verificacion_de_vivienda = ghCSV.API_gob_vivienda_builder("GetVerificacion",dimensiones_verificacion)
 Produccion_de_vivienda = ghCSV.API_gob_vivienda_builder("GetProduccion",dimensiones_produccion)
 ############ END OF API CSV GENERATION #########
+
+# Costo(tipo-de-vivienda, tiempo) = f_costo(tipo_de_vivienda,tiempo) + f_costo_demanda(tipo_de_vivienda,tiempo)
+
+# f_costo(tipo_de_vivienda,tiempo) = tipo_de_vivienda(vertical/horizontal,var_precios,m2)
+
+# f_costo_demanda = pop_growth(non-linear,non-exponencial,non-recursive)---f(rango_de_edades)*PEA---cantidad de 
+#                       gente @gente que sera parte o es de la PEA
+# f_costo_vivienda = P(no_de_casas) + Incremento_m2

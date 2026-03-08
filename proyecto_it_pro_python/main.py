@@ -11,6 +11,11 @@ Guardar porcentajes de costos y variables de precios. Como JSON, CSV y XML
 '''
 
 import housing_proccess as hp
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+
 
 def housing_costs():
     segmento_uma : str
@@ -68,7 +73,24 @@ def main():
     # Fill a list of dataframes from each year, obtained from CSV's
     hp.append_csv_financiamiento(record_financiamiento_csv)
     hp.append_csv_registro(records_reg_csv)
-    hp.medidas_tendencia_central(record_financiamiento_csv)
+    matriz =hp.filter_dataframe(record_financiamiento_csv)
+    '''
+    Devuelve una matriz con el promedio de cada muestra.
+    '''
+    #hp.matrix_process(matriz)
+    
+    # Rellena NaN con 0's 
+    matriz.fillna(0)
+    
+    # Media por Grupo Salarial
+    print("Media por Grupo Salarial :",matriz.mean(axis=1))
+    print("Media por Año :",matriz.mean(axis=0))
+    print("Grupo Salarial con mayor crecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmax())
+    print("Grupo Salarial con mayor decrecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmin())
+
+    sns.heatmap(matriz, cmap="coolwarm", center=0)
+    plt.show()
+
     pass
 
 

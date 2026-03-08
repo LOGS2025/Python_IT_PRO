@@ -59,7 +59,9 @@ salario_mínimo xbarra xondulada xmo
 salario xbarra xondulada xmo
 '''
 
-def medidas_tendencia_central(lista_csv : list) -> pd.DataFrame:
+# Primero filtra todos los dataframes y los une, se pueden exportar a csv. Después
+# devuelve una matriz con los promedios de montos/casa por año y rango salarial
+def filter_dataframe(lista_csv : list) -> pd.DataFrame:
 
     def export_results(lista_csv : list)->None:
         lista_csv.to_csv("FinalRes.csv",index=False)
@@ -84,16 +86,9 @@ def medidas_tendencia_central(lista_csv : list) -> pd.DataFrame:
         df_whole["mean cost per house"] = df_whole["sum"]/df_whole["instancias"]
 
         filter.append(df_whole)
-    concat_df = pd.concat(filter, ignore_index=True)
-    '''
-    rango_salarial          sum        mean       min         max  instancias  year  mean cost per house
-    0    2.6 o menos   842.724567  105.340571  0.651417  461.095188         252  2025             3.344145
-    1    2.61 a 4.00   205.720149   29.388593  0.500000   86.657585          79  2025             2.604053
-    2    4.01 a 6.00   413.665563   51.708195  0.980727  212.163304         191  2025             2.165788
-    3    6.01 a 9.00   682.033467   85.254183  1.124899  378.473097         270  2025             2.526050
-    4   9.01 a 12.00   601.645656  100.274276  6.528995  253.313862         221  2025             2.722379
-    5      Más de 12  1455.127504  207.875358  0.894751  972.203085         356  2025             4.087437
-    '''
+    # Put everything together for new analysis
+    ###################################################
+    # Filtro por promedio de monto/vivenda_nueva
     central_tendency_df_dict = {"avg_cost/house": {}}
     for dataframe in filter:
         for i in range(26):
@@ -120,45 +115,13 @@ def medidas_tendencia_central(lista_csv : list) -> pd.DataFrame:
         columns="year",
         values="avg_cost/house"
     )
+    return matrix
+
+def matrix_process(matrix : pd.DataFrame) -> None:
     matrix_clean = matrix.rename_axis(columns=None).reset_index()
     print(matrix_clean)
     print(matrix.pct_change(axis=1))
-    #print(matrix)
-    #export_results(results)
-    #print(matrix.T.plot())
-    
-    return concat_df
-
-def medidas_generales(lista_csv : list) -> pd.DataFrame:
-
-    def export_results()->None:
-        results.to_csv("FinalRes.csv",index=False)
-        final_csv = pd.merge(results, lista_csv, on="rango_salarial", how="outer")
-        final_csv.to_csv("Final.csv",index=False)
-        pass
-
-    results = []
-    for dataframe in lista_csv:
-        year = dataframe["year"].iloc[0]
-
-        df_whole = dataframe.groupby("rango_salarial").agg(
-            count=("monto en millones", "count"),
-            sum=("monto en millones", "sum"),
-            mean=("monto en millones", "mean"),
-            min=("monto en millones", "min"),
-            max=("monto en millones", "max"),
-            instancias=("acciones", "sum")
-        )
-
-        df_whole["year"] = year
-        df_whole = df_whole.reset_index()
-
-        results.append(df_whole)
-    concat_df = pd.concat(results, ignore_index=True)
-
-    export_results
-    
-    return concat_df
+    pass
 
 # Promedio del monto total por rango salarial
 def media_rangos_salarial_plot(results : list ,lista_csv : list)->None:

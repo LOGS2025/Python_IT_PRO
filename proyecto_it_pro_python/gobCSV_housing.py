@@ -11,14 +11,15 @@ import requests
 ############## FACTORY FOR API CLASS ################
 
 class API_gob_vivienda_builder():
-    años = '2025'
+    años : int
     clave_estado = '09'
     clave_municipio = '014'
     url : str
     df : pandas.DataFrame
 
-    def __init__(self, Get_Function : str, dimensiones : str):
+    def __init__(self, Get_Function : str, dimensiones : str, año : int):
         self.dimensiones = dimensiones
+        self.años = año
         params=f"{Get_Function}/{self.años}/{self.clave_estado}/{self.clave_municipio}/{dimensiones}"
         self.url=f"https://sniiv.sedatu.gob.mx/api/CuboAPI/{params}"
         r = requests.get(self.url)
@@ -32,7 +33,7 @@ class API_gob_vivienda_builder():
         pass
 
     def export_to_csv(self, nombre_CSV : str):
-        self.df.to_csv(f"./csv/{nombre_CSV}.csv", index=False)
+        self.df.to_csv(f"./csv/{nombre_CSV}.{self.años}.csv", index=False)
         print("Exported to CSV")
         pass
 

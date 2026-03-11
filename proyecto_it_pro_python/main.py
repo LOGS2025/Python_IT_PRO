@@ -84,6 +84,10 @@ def ofertaDemanda():
 def incertidumbre():
     pass
 
+def monteCarlo():
+    pass
+
+
 def main():
     record_financiamiento_csv = []
     records_reg_csv = {}
@@ -98,39 +102,39 @@ def main():
     Devuelve una matriz con el promedio de cada muestra.
     '''
     hp.matrix_process(matriz)
-    
+
     # Rellena NaN con 0's 
     matriz.fillna(0)
-    
-    # Media por Grupo Salarial
-    #print("Media por Grupo Salarial :",matriz.mean(axis=1))
-    #print("Media por Año :",matriz.mean(axis=0))
-    #print("Grupo Salarial con mayor crecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmax())
-    #print("Grupo Salarial con mayor decrecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmin())
+
+    avg_prices = np.array(matriz.mean(axis=0))
+    print(avg_prices) 
+
+    # Media Muestral
+    mu = np.mean(avg_prices)
+    # Desv Est. Muestral
+    sigma = np.std(avg_prices, ddof=1)
+    print(f"Media Muestral : {mu} | Desv.Est. : {sigma}")
    
-    #print(matriz)
-    #print("Matriz : \n\n",matriz._get_column_array(18))
-    
+
     '''
-    - Higher value → **more unstable price growth**
-    - Lower value → **more stable market**
+    A simple Monte Carlo simulation does nothing if the only variables are the sample average 
+    cost/house and it's std. deviation. Ant it looks like the following. But, if we add other variables
+    suited for this project like m^2 price rise, demographic growth distribution, and uncertainty (and knowing
+    analytical solutions are impossible),then simulation is the only way to know how the samples will behave in
+    X years. And that way, through simulation, distributions are not needed, because the simulation itself will
+    show a distribution of random tries.
     '''
-    volatility = matriz.std(axis=1)
-    print("volatility\n\n",volatility)
-    
-    '''
-    Long-Term Growth by Income Group
-    '''
-    growth = matriz.iloc[:,-1] - matriz.iloc[:,0]
-    print("Growth Matrix: \n\n",growth)
- 
-    '''
-    Mapa de Calor
-    '''
-    #sns.heatmap(matriz, cmap="coolwarm", center=0)
-    #plt.show()
+    N = 100_000
+    print(N)
+
+    simulated_prices = np.random.normal(mu,sigma,N)
+
+    prob = np.mean(simulated_prices > 2)
+    print(prob)
 
     pass
+
+
 
 
 if __name__ == '__main__':

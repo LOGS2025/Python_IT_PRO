@@ -2,7 +2,7 @@ import pandas as pd
 import gobCSV_housing as housing
 import matplotlib.pyplot as plt
 import numpy as np
-
+    
 
 def get_API_csv():
     dimensiones_financiamiento = 'organismo,grupo_organismo,rango_salarial,valor_vivienda,tipo_credito,modalidad'
@@ -119,8 +119,8 @@ def filter_dataframe(lista_csv : list) -> pd.DataFrame:
 
 def matrix_process(matrix : pd.DataFrame) -> None:
     matrix_clean = matrix.rename_axis(columns=None).reset_index()
-    print(matrix_clean)
-    print(matrix.pct_change(axis=1))
+    #print(matrix_clean)
+    #print(matrix.pct_change(axis=1))
     pass
 
 # Promedio del monto total por rango salarial

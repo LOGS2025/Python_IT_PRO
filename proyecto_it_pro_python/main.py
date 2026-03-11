@@ -26,6 +26,8 @@ def housing_costs():
     # modalidad : str
     # valor_vivienda : str 
     # avance_obra : str
+    pass
+
     '''
     BJ => Benito Juárez
     m => male
@@ -45,11 +47,7 @@ def housing_costs():
     
     Crecimiento Anual => YrGrowth
     YrGrowth_1990_2020 = 0.0119->0.0117
-
-
     '''
-
-    pass
 
 # El parseo demográfico podemos aproximarlo sabiendo que la población en 
 # la Benito Juárez oscila alrededor de 400,000 habitantes. De esto, tenemos 
@@ -99,19 +97,38 @@ def main():
     '''
     Devuelve una matriz con el promedio de cada muestra.
     '''
-    #hp.matrix_process(matriz)
+    hp.matrix_process(matriz)
     
     # Rellena NaN con 0's 
     matriz.fillna(0)
     
     # Media por Grupo Salarial
-    print("Media por Grupo Salarial :",matriz.mean(axis=1))
-    print("Media por Año :",matriz.mean(axis=0))
-    print("Grupo Salarial con mayor crecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmax())
-    print("Grupo Salarial con mayor decrecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmin())
-
-    sns.heatmap(matriz, cmap="coolwarm", center=0)
-    plt.show()
+    #print("Media por Grupo Salarial :",matriz.mean(axis=1))
+    #print("Media por Año :",matriz.mean(axis=0))
+    #print("Grupo Salarial con mayor crecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmax())
+    #print("Grupo Salarial con mayor decrecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmin())
+   
+    #print(matriz)
+    #print("Matriz : \n\n",matriz._get_column_array(18))
+    
+    '''
+    - Higher value → **more unstable price growth**
+    - Lower value → **more stable market**
+    '''
+    volatility = matriz.std(axis=1)
+    print("volatility\n\n",volatility)
+    
+    '''
+    Long-Term Growth by Income Group
+    '''
+    growth = matriz.iloc[:,-1] - matriz.iloc[:,0]
+    print("Growth Matrix: \n\n",growth)
+ 
+    '''
+    Mapa de Calor
+    '''
+    #sns.heatmap(matriz, cmap="coolwarm", center=0)
+    #plt.show()
 
     pass
 

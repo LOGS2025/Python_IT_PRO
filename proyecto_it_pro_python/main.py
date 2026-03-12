@@ -29,20 +29,6 @@ import matplotlib.pyplot as plt
 import pop_model as pm
 from sklearn.linear_model import LinearRegression 
 
-# Data from 2020-2021
-m2_raise_yearly =  0.109
-
-# Returns the average of all average prices for a house
-def housing_costs(avg_prices):
-    # Media Muestral
-    mu = np.mean(avg_prices)
-    return mu
-
-def ppea_population(population_some_year : float):
-    rango_edad : str
-    rango_salarial : str
-    ppea : int
-    pass
 
 # A través de la regresión linear propuesta para determinar el crecimiento poblacional, obtenemos
 # la población en el año pasado como argumento.
@@ -52,31 +38,29 @@ def demographic_parse(growth_model : sklearn.LinearRegression,year : float)->flo
     population_that_year = growth_model.intercept_ + growth_model.coef_ * year
     return population_that_year
 
-# PARSE DATAFRAMES ON HOUSING COSTS 
-def calc_costos_construccion(cost_per_house, years):
-    # Si tomamos al porcentaje de costo de los materiales como el 60%,
-    # Obtenemos el 60% de costo/casa, y cada año lo multiplicamos
-    # por el aumento. Este dato pertenece al 10.9% de aumento del 
-    # 2020-2021
-    percentage_cost = cost_per_house*0.6
-    next_year_cost = cost_per_house+percentage_cost*m2_raise_yearly
-    print(cost_per_house,next_year_cost)
-    pass
+def monteCarlo(price_question : float, years : int):
+    P0 = 0.758   # current average price (millions)
+    # Data from 2020-2021
+    mu = 0.109   # growth
+    sigma = 0.73 # volatility
 
-# MATH
-def costo_final():
-    pass
+    sims = 10000
 
+    paths = np.zeros((years, sims))
+    paths[0] = P0
 
-def oferta(record_csv,population_per_year):
+    for t in range(1, years):
+        Z = np.random.normal(0,1,sims)
+        paths[t] = paths[t-1] * np.exp((mu - 0.5*sigma**2) + sigma*Z)
 
+    plt.plot(paths[:, :100])
+    #plt.xlabel("Years")
+    #plt.ylabel("Average house price (millions)")
+    #plt.show()
 
-    pass
-
-def incertidumbre():
-    pass
-
-def monteCarlo():
+    future_prices = paths[-1]
+    prob = np.mean(future_prices > price_question)
+    print(f"Probabilidad de que el costo promedio de una casa en {years} años sea de {price_question} millones de pesos es :",prob)
     pass
 
 def main():
@@ -86,6 +70,7 @@ def main():
     pop = [360_478.00,355_017.00,385_439.00,417_416.00,432_259.00]
     record_financiamiento_csv = []
     pop_growth_model = pm.linear_regression_for_population(year,pop) 
+    growth = 0.109
 
     # GET the information, only run once
     #hp.get_API_csv()
@@ -103,9 +88,6 @@ def main():
     mu = np.mean(avg_prices)
     # Desv Est. Muestral
     sigma = np.std(avg_prices, ddof=1)
-#   N = 100_000
-#   simulated_prices = np.random.normal(mu,sigma,N)
-#   prob = np.mean(simulated_prices > 2)
 
     table_financiamiento = hp.total_instances_of_housing(filter)
     table_financiamiento.fillna(0)
@@ -115,34 +97,10 @@ def main():
     print("Std Casas Por Año desde 2000 hasta 2020",np.std(houses_per_year))
     print("Mu Promedio de los promedios de costo por casa desde 2000 hasta 2020",mu)
     print("Std de costo por casa desde 2000 hasta 2020",sigma)
-    print("Aumento anual de 2020 a 2021 del precio del m2",m2_raise_yearly)
+    print("Aumento anual de 2020 a 2021 del precio del m2",growth)
     print("Modelo de regresión lineal con r2=91% de 2000-2020 (coef,intercept):",pop_growth_model.coef_,pop_growth_model.intercept_)
     #print("Volatilidad ",volatility(matriz))
-
-    P0 = 0.758   # current average price (millions)
-    mu = 0.109   # growth
-    sigma = 0.73 # volatility
-
-    years = 2
-    sims = 10000
-
-    paths = np.zeros((years, sims))
-    paths[0] = P0
-
-    for t in range(1, years):
-        Z = np.random.normal(0,1,sims)
-        paths[t] = paths[t-1] * np.exp((mu - 0.5*sigma**2) + sigma*Z)
-
-    plt.plot(paths[:, :100])
-    #plt.xlabel("Years")
-    #plt.ylabel("Average house price (millions)")
-    #plt.show()
-
-    future_prices = paths[-1]
-    prob = np.mean(future_prices > 1)
-    print(prob*100)
-
-
+    monteCarlo(2.3,5) # Probability of a house costing 2.3 million in 5 years
     pass
 
 

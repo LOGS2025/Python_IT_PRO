@@ -13,9 +13,7 @@ def average(matriz):
 - Lower value → **more stable market**
 '''
 def volatility(matriz):
-    volatility = matriz.std(axis=1)
-    print("volatility\n\n",volatility)
-    pass
+    return matriz.std(axis=1)
 '''
 Long-Term Growth by Income Group
 '''

@@ -20,14 +20,17 @@ Guardar porcentajes de costos y variables de precios. Como JSON, CSV y XML
 
 
 
+from pandas.io.pytables import performance_doc
+from data_functions import volatility
 import housing_proccess as hp
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 import pop_model as pm
 from sklearn.linear_model import LinearRegression 
 
+# Data from 2020-2021
+m2_raise_yearly =  0.109
 
 # Returns the average of all average prices for a house
 def housing_costs(avg_prices):
@@ -50,8 +53,14 @@ def demographic_parse(growth_model : sklearn.LinearRegression,year : float)->flo
     return population_that_year
 
 # PARSE DATAFRAMES ON HOUSING COSTS 
-def calc_costos_construccion(avg_prices):
-    avg_avg_house_price = housing_costs(avg_prices)
+def calc_costos_construccion(cost_per_house, years):
+    # Si tomamos al porcentaje de costo de los materiales como el 60%,
+    # Obtenemos el 60% de costo/casa, y cada año lo multiplicamos
+    # por el aumento. Este dato pertenece al 10.9% de aumento del 
+    # 2020-2021
+    percentage_cost = cost_per_house*0.6
+    next_year_cost = cost_per_house+percentage_cost*m2_raise_yearly
+    print(cost_per_house,next_year_cost)
     pass
 
 # MATH
@@ -100,8 +109,40 @@ def main():
 
     table_financiamiento = hp.total_instances_of_housing(filter)
     table_financiamiento.fillna(0)
-    sum = table_financiamiento.sum(1) # Devuelve las instancias de vivienda nuevas totales por año
-    print(sum)
+    houses_per_year = table_financiamiento.sum(1) # Devuelve las instancias de vivienda nuevas totales por año
+    print(type(houses_per_year))
+    print("Mu Casas Por Año desde 2000 hasta 2020",np.mean(houses_per_year))
+    print("Std Casas Por Año desde 2000 hasta 2020",np.std(houses_per_year))
+    print("Mu Promedio de los promedios de costo por casa desde 2000 hasta 2020",mu)
+    print("Std de costo por casa desde 2000 hasta 2020",sigma)
+    print("Aumento anual de 2020 a 2021 del precio del m2",m2_raise_yearly)
+    print("Modelo de regresión lineal con r2=91% de 2000-2020 (coef,intercept):",pop_growth_model.coef_,pop_growth_model.intercept_)
+    #print("Volatilidad ",volatility(matriz))
+
+    P0 = 0.758   # current average price (millions)
+    mu = 0.109   # growth
+    sigma = 0.73 # volatility
+
+    years = 2
+    sims = 10000
+
+    paths = np.zeros((years, sims))
+    paths[0] = P0
+
+    for t in range(1, years):
+        Z = np.random.normal(0,1,sims)
+        paths[t] = paths[t-1] * np.exp((mu - 0.5*sigma**2) + sigma*Z)
+
+    plt.plot(paths[:, :100])
+    #plt.xlabel("Years")
+    #plt.ylabel("Average house price (millions)")
+    #plt.show()
+
+    future_prices = paths[-1]
+    prob = np.mean(future_prices > 1)
+    print(prob*100)
+
+
     pass
 
 

@@ -63,7 +63,7 @@ salario xbarra xondulada xmo
 
 # Primero filtra todos los dataframes y los une, se pueden exportar a csv. Después
 # devuelve una matriz con los promedios de montos/casa por año y rango salarial
-def filter_dataframe(lista_csv : list) -> pd.DataFrame:
+def filter_dataframe(lista_csv : list) -> list:
     filter = []
     for dataframe in lista_csv:
         year = dataframe["year"].iloc[0]
@@ -81,11 +81,13 @@ def filter_dataframe(lista_csv : list) -> pd.DataFrame:
         df_whole["mean cost per house"] = df_whole["sum"]/df_whole["instancias"]
 
         filter.append(df_whole)
-    # Put everything together for new analysis
+    return filter
+
+def get_matrix(list_csv : list):
     ###################################################
     # Filtro por promedio de monto/vivenda_nueva
     central_tendency_df_dict = {"avg_cost/house": {}}
-    for dataframe in filter:
+    for dataframe in list_csv:
         for i in range(26):
             try:
                 year = dataframe.loc[i, "year"]
@@ -104,7 +106,6 @@ def filter_dataframe(lista_csv : list) -> pd.DataFrame:
     central_tendency_df.to_csv("Central_tendency.csv",index=True)
     central_tendency_df = pd.read_csv("./Central_tendency.csv")
 
-    # Ahora procesamos las medias de las "¿muestras?" y encontramos la media muestral, varianza, mediana, moda:
     matrix = central_tendency_df.pivot(
         index="rango_salarial",
         columns="year",
@@ -169,7 +170,12 @@ Estos productos son susceptibles de recibir financiamiento por parte de los
 Organismos Nacionales de Vivienda (ONAVIS), la banca comercial o intermediarios financieros como las Sofoles y Sofomes.
 '''
 
-def average_surface_per_housing(lista_csv : list)->list:
+def total_instances_of_housing(lista_csv : list):
+    concat_df = pd.concat(lista_csv,axis=0)
+    table = concat_df.pivot(index="year",columns="rango_salarial",values="instancias")
+    return table
+
+def average_surface_per_housing(lista_csv : list):
     filter = []
     for dataframe in lista_csv:
         year = dataframe["year"].iloc[0]
@@ -184,18 +190,7 @@ def average_surface_per_housing(lista_csv : list)->list:
         filter.append(df_whole)
     concat_df = pd.concat(filter, axis=0)
     table = concat_df.pivot(index="year",columns="superficie",values="instancias")
-
-    y = (table._get_column_array(1))
-    print(y)
-    year_list = []
-    year_list = table._get_axis(0).to_numpy()
-    x = year_list.reshape((-1,1))
-    
-    model = LinearRegression().fit(x,y)
-    r_sq = model.score(x,y)
-    print(f"coefficient of determination: {r_sq}")
-
-    return filter
+    return table
 
 #cost/housing -> m^2/housing
 

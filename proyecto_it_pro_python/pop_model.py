@@ -1,28 +1,28 @@
 import math
+import numpy as np
+from seaborn import xkcd_palette
+from sklearn.linear_model import LinearRegression 
 
-alfa_start = 0.0001
-x_0 = 0.961482
-k = 500000
 
-pop_values = {
-        '1980':480741.00,
-        '1990':407811.00,
-        '2000':360478.00,
-        '2005':355017.00,
-        '2010':385439.00,
-        '2015':417416.00,
-        '2020':432259.00 
-        }
+'''
+Since the population of this 'District' dropped since 1980, we will only do the regression
+from 2000 onward, where it looks like a stable growth has begun again, even though the population 
+is still well below the 1980 census.
+'''
 
-alfas = []
-#for pop_year in pop_values:
-X_1 = 0
-pop_year = 480741
-while True:
-    X_1 = alfa_start*x_0*(1-x_0)*k
-    alfa_start+=0.001
-    if X_1 < pop_year + 20000 and pop_year -20000 < X_1:
-        alfas.append(alfa_start)
-        break
-print(alfas)
+def linear_regression_for_population()->sklearn.LinearRegression:
+    year_complete = [1980,1990,2000,2005,2010,2015,2020]
+    year = [2000,2005,2010,2015,2020]
+    pop_complete = [480_741.00,407_811.00,360_478.00,355_017.00,385_439.00,417_416.00,432_259.00]
+    pop = [360_478.00,355_017.00,385_439.00,417_416.00,432_259.00]
 
+    x = np.array(year).reshape((-1,1))
+    y = np.array(pop)
+
+    model = LinearRegression().fit(x,y)
+    r_sq = model.score(x,y)
+
+    print(f"coefficient of determination for the population growth taking 2000->2020: {r_sq}")
+    return model
+
+linear_regression_for_population()

@@ -2,7 +2,7 @@ import pandas as pd
 import gobCSV_housing as housing
 import matplotlib.pyplot as plt
 import numpy as np
-    
+from sklearn.linear_model import LinearRegression 
 
 def get_API_csv():
     dimensiones_financiamiento = 'organismo,grupo_organismo,rango_salarial,valor_vivienda,tipo_credito,modalidad'
@@ -38,15 +38,17 @@ def append_csv_financiamiento(lista_csv : list) -> list:
     to_millions(lista_csv)
     return lista_csv
 
-def append_csv_registro(dict_csv : dict) -> dict:
-    for año in range(26):
+def append_csv_registro(lista_csv : list) -> list:
+    for año in range(2000,2026):
         try:
             # Casas nuevas, recámara, superficie y si es vertical u horizontal
-            dict_csv[año+2000]=(pd.read_csv(f"./csv/GetRegistro.{año+2000}.csv"))
+            df_tmp =(pd.read_csv(f"./csv/GetRegistro.{año}.csv"))
+            df_tmp["year"]=(año)
+            lista_csv.append(df_tmp)
         except FileNotFoundError:
-            print("No existe registro")
+            print(f"No existe registro de {año}")
             continue
-    return dict_csv
+    return lista_csv
 
 '''
 Varianza entre Viviendas Nuevas por rango salarial -- DEMANDA DE CASAS POR AÑO
@@ -62,13 +64,6 @@ salario xbarra xondulada xmo
 # Primero filtra todos los dataframes y los une, se pueden exportar a csv. Después
 # devuelve una matriz con los promedios de montos/casa por año y rango salarial
 def filter_dataframe(lista_csv : list) -> pd.DataFrame:
-
-    def export_results(lista_csv : list)->None:
-        lista_csv.to_csv("FinalRes.csv",index=False)
-        final_csv = pd.merge(lista_csv, lista_csv, on="rango_salarial", how="outer")
-        final_csv.to_csv("Final.csv",index=False)
-        pass
-
     filter = []
     for dataframe in lista_csv:
         year = dataframe["year"].iloc[0]
@@ -174,16 +169,36 @@ Estos productos son susceptibles de recibir financiamiento por parte de los
 Organismos Nacionales de Vivienda (ONAVIS), la banca comercial o intermediarios financieros como las Sofoles y Sofomes.
 '''
 
-def instancias_superficie(records_reg_csv : dict)->None:
-    results = []
-    for year in (range(2000,2026)): # records_reg_csv holds dicts
-        try:
-            reg_df =records_reg_csv[year]
-        except KeyError:
-            continue
-        reg_df["year"]=year
-        results.append(reg_df)
-    pass
+def average_surface_per_housing(lista_csv : list)->list:
+    filter = []
+    for dataframe in lista_csv:
+        year = dataframe["year"].iloc[0]
+
+        df_whole = dataframe.groupby("superficie").agg(
+            instancias=("viviendas", "sum"),
+        )
+        # Add year column
+        df_whole["year"] = year
+        df_whole = df_whole.reset_index()
+
+        filter.append(df_whole)
+    concat_df = pd.concat(filter, axis=0)
+    table = concat_df.pivot(index="year",columns="superficie",values="instancias")
+
+    y = (table._get_column_array(1))
+    print(y)
+    year_list = []
+    year_list = table._get_axis(0).to_numpy()
+    x = year_list.reshape((-1,1))
+    
+    model = LinearRegression().fit(x,y)
+    r_sq = model.score(x,y)
+    print(f"coefficient of determination: {r_sq}")
+
+    return filter
+
+#cost/housing -> m^2/housing
+
 
 # Árbol de decisiones
 

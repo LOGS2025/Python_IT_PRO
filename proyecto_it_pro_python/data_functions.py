@@ -22,7 +22,6 @@ def growth(matriz):
     print("Growth Matrix: \n\n",growth)
     print("Grupo Salarial con mayor crecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmax())
     print("Grupo Salarial con mayor decrecimiento de Media del monto/vivienda nueva cada año :",matriz.idxmin())
-
     pass
 '''
 Mapa de Calor
